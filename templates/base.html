@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Blog CMS{% endblock %}</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container nav-wrapper">
+      <a href="/" class="nav-brand">
+        <span>✍️ ModernCMS</span>
+      </a>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        {% if user %}
+          <a href="/admin/dashboard">Dashboard</a>
+          <a href="/admin/logout" style="color: var(--danger);">Logout</a>
+        {% else %}
+          <a href="/admin/login">Admin Portal</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="container">
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2025 ModernCMS — Engineered with Python & FastAPI</p>
+    </div>
+  </footer>
+</body>
+</html>

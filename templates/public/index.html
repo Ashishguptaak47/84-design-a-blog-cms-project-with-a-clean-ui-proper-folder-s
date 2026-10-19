@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}ModernCMS — Insights & Stories{% endblock %}
+
+{% block content %}
+<div class="filter-bar">
+  <form action="/" method="get" style="display: flex; gap: 0.5rem; flex: 1;">
+    <input type="text" name="q" class="search-input" placeholder="Search articles..." value="{{ search_query }}">
+    <button type="submit" class="btn">Search</button>
+    {% if search_query or current_tag %}
+      <a href="/" class="btn btn-secondary" style="align-self: center;">Clear</a>
+    {% endif %}
+  </form>
+</div>
+
+{% if tags %}
+<div style="margin-bottom: 2rem;">
+  <span style="font-size: 0.85rem; color: var(--text-muted); margin-right: 0.5rem;">Topics:</span>
+  <div class="tag-list" style="display: inline-flex;">
+    <a href="/" class="badge {% if not current_tag %}badge-tag{% endif %}">All</a>
+    {% for t in tags %}
+      <a href="/?tag={{ t.slug }}" class="badge {% if current_tag == t.slug %}badge-tag{% endif %}">#{{ t.name }}</a>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+<div>
+  {% if posts %}
+    {% for post in posts %}
+      <article class="post-card">
+        <div class="post-meta">
+          <span>{{ post.created_at.strftime('%B %d, %Y') }}</span>
+          <span>•</span>
+          <span>{{ post.reading_time }} min read</span>
+          <span>•</span>
+          <span>{{ post.views_count }} views</span>
+        </div>
+        <h2><a href="/post/{{ post.slug }}">{{ post.title }}</a></h2>
+        <p style="color: var(--text-muted); margin-bottom: 1rem;">{{ post.excerpt }}</p>
+        <div class="tag-list">
+          {% for tag in post.tags %}
+            <span class="badge badge-tag">#{{ tag.name }}</span>
+          {% endfor %}
+        </div>
+      </article>
+    {% endfor %}
+  {% else %}
+    <div class="post-card" style="text-align: center; padding: 3rem 1rem;">
+      <h3>No posts found</h3>
+      <p style="color: var(--text-muted); margin-top: 0.5rem;">Try adjusting your search criteria or tags.</p>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

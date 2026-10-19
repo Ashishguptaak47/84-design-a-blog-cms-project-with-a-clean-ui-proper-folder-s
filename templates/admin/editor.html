@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}{% if post %}Edit Post{% else %}New Post{% endif %} — ModernCMS{% endblock %}
+
+{% block content %}
+<div class="article-container">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <h2>{% if post %}Edit Post{% else %}Create New Post{% endif %}</h2>
+    <a href="/admin/dashboard" class="btn btn-secondary btn-sm">Cancel</a>
+  </div>
+
+  <form action="/admin/posts/save" method="post">
+    <input type="hidden" name="post_id" value="{{ post.id if post else 0 }}">
+
+    <div class="form-group">
+      <label>Article Title</label>
+      <input type="text" name="title" class="form-control" required value="{{ post.title if post else '' }}" placeholder="e.g., Building Scalable Systems in Python">
+    </div>
+
+    <div class="form-group">
+      <label>Excerpt / Short Summary</label>
+      <input type="text" name="excerpt" class="form-control" value="{{ post.excerpt if post else '' }}" placeholder="A brief overview shown on search listings...">
+    </div>
+
+    <div class="form-group">
+      <label>Tags (comma-separated)</label>
+      <input type="text" name="tags_input" class="form-control" value="{% if post %}{{ post.tags | map(attribute='name') | join(', ') }}{% endif %}" placeholder="python, architecture, fast-api">
+    </div>
+
+    <div class="form-group">
+      <label>Markdown Content</label>
+      <textarea name="content_markdown" class="form-control" style="min-height: 320px; font-family: monospace;" required placeholder="# Hello World
+
+Write your article in Markdown here...">{{ post.content_markdown if post else '' }}</textarea>
+    </div>
+
+    <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem;">
+      <input type="checkbox" name="is_published" id="is_published" value="true" {% if not post or post.is_published %}checked{% endif %}>
+      <label for="is_published" style="margin-bottom: 0; cursor: pointer;">Publish immediately</label>
+    </div>
+
+    <div style="margin-top: 1.5rem;">
+      <button type="submit" class="btn">Save & Publish</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

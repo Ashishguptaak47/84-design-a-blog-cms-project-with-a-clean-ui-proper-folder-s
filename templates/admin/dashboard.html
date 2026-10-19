@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard — ModernCMS{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+  <div>
+    <h2>Admin Dashboard</h2>
+    <p style="color: var(--text-muted); font-size: 0.9rem;">Welcome back, {{ user.username }}.</p>
+  </div>
+  <div style="display: flex; gap: 0.75rem;">
+    <a href="/admin/comments" class="btn btn-secondary">Manage Comments</a>
+    <a href="/admin/posts/new" class="btn">+ Create Post</a>
+  </div>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-val">{{ total_posts }}</div>
+    <div class="stat-label">Total Articles</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-val">{{ published_posts }}</div>
+    <div class="stat-label">Published Articles</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-val">{{ total_comments }}</div>
+    <div class="stat-label">Reader Comments</div>
+  </div>
+</div>
+
+<div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Status</th>
+        <th>Views</th>
+        <th>Date</th>
+        <th style="text-align: right;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in posts %}
+      <tr>
+        <td>
+          <strong><a href="/post/{{ p.slug }}" target="_blank">{{ p.title }}</a></strong>
+        </td>
+        <td>
+          {% if p.is_published %}
+            <span class="badge" style="background: #dcfce7; color: #166534;">Published</span>
+          {% else %}
+            <span class="badge" style="background: #fef3c7; color: #92400e;">Draft</span>
+          {% endif %}
+        </td>
+        <td>{{ p.views_count }}</td>
+        <td style="color: var(--text-muted); font-size: 0.85rem;">{{ p.created_at.strftime('%Y-%m-%d') }}</td>
+        <td style="text-align: right;">
+          <a href="/admin/posts/{{ p.id }}/edit" class="btn btn-sm btn-secondary">Edit</a>
+          <form action="/admin/posts/{{ p.id }}/delete" method="post" style="display: inline-block; margin-left: 0.35rem;" onsubmit="return confirm('Delete this post?');">
+            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">No posts yet. Click '+ Create Post' to write one.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

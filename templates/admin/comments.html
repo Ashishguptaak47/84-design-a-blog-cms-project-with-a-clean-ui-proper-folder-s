@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Manage Comments — ModernCMS{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+  <h2>Comment Moderation</h2>
+  <a href="/admin/dashboard" class="btn btn-secondary btn-sm">← Dashboard</a>
+</div>
+
+<div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Author</th>
+        <th>Post</th>
+        <th>Comment</th>
+        <th>Date</th>
+        <th style="text-align: right;">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in comments %}
+      <tr>
+        <td>
+          <strong>{{ c.author_name }}</strong><br>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">{{ c.author_email or 'No email' }}</span>
+        </td>
+        <td>
+          <a href="/post/{{ c.post.slug }}" target="_blank">{{ c.post.title }}</a>
+        </td>
+        <td style="max-width: 320px; word-break: break-word;">{{ c.content }}</td>
+        <td style="font-size: 0.85rem; color: var(--text-muted);">{{ c.created_at.strftime('%Y-%m-%d') }}</td>
+        <td style="text-align: right;">
+          <form action="/admin/comments/{{ c.id }}/delete" method="post" onsubmit="return confirm('Delete this comment?');">
+            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">No comments found.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
